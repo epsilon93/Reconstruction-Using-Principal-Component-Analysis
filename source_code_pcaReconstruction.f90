@@ -4,8 +4,8 @@
 
 program real
 implicit none
-double precision,dimension(:),allocatable::b,ranbir,M,SD
-double precision,dimension(:,:),allocatable::SHARMA,EF,U_N
+double precision,dimension(:),allocatable::b,initial_array,M,SD
+double precision,dimension(:,:),allocatable::final_array,EF,U_N
 integer,dimension(:),allocatable::cont,k,ek
 integer::i,j,i1,l10,j1,I12,L66,l100,nr,num_param,INFO, LWORK,I2,LDA,NEW13
 double precision::r1,dp,CHI,R,ERROR2,SUM1993,SUM2,HP,H0,H0_V,HT,OMEGAM,OMEGAX,HS,CHI2,R01,S,RS
@@ -36,8 +36,8 @@ allocate(ek(num_param))
 allocate(k(num_param))
 allocate(cont(num_param))
 allocate(b(l100))
-allocate(ranbir(num_param+1))   
-allocate(SHARMA(NUM_PARAM+1,nr))
+allocate(initial_array(num_param+1))   
+allocate(final_array(NUM_PARAM+1,nr))
 
 ALLOCATE(SD(NUM_PARAM))
 ALLOCATE(C(NUM_PARAM,NUM_PARAM))
@@ -61,8 +61,8 @@ OPEN(9696,FILE='./out_files/NEIGENFNS_p07_quasar.txt',STATUS='replace')
 OPEN(13,FILE='./out_files/DATA_FINAL_N_p07_quasar.txt',STATUS='replace')
 OPEN(1993,FILE='./out_files/FINAL_FILE_N_p07_quasar.txt',STATUS='replace')
 
-SHARMA = 0
-!$OMP PARALLEL DEFAULT(PRIVATE) SHARED(NUM_PARAM,OMEGAM,OMEGAX,H0,H0_V,L100,U,dat,SHARMA,nr) NUM_THREADS(12)
+final_array = 0
+!$OMP PARALLEL DEFAULT(PRIVATE) SHARED(NUM_PARAM,OMEGAM,OMEGAX,H0,H0_V,L100,U,dat,final_array,nr) NUM_THREADS(12)
 !$OMP DO
 
 DO L66 = 1,nr                                           !nr is the number of patches
@@ -72,7 +72,7 @@ I12 = 0
 k=0
 cont = 0
 ek = 0
-ranbir = 0
+initial_array = 0
         do i=1,l100                                  !creation of net on a particular patch
         b(i) = r1 - i*dp
         end do
@@ -124,19 +124,19 @@ chi=0
  
                          if (chi .le. chi2)then 
                          chi2=chi
-                         ranbir(1)=chi
+                         initial_array(1)=chi
 
                           DO J=1,NUM_PARAM
-                          ranbir(J+1) = b(K(J))
+                          initial_array(J+1) = b(K(J))
                           END DO 
 
                          end if
 
           END DO
 
-        SHARMA(1,l66) = chi2
+        final_array(1,l66) = chi2
         DO J = 1,NUM_PARAM
-        SHARMA(J+1,l66) = ranbir(J+1)
+        final_array(J+1,l66) = initial_array(J+1)
         END DO
 END DO
 !$OMP END DO
@@ -145,7 +145,7 @@ END DO
 9999 FORMAT( 11(:,5X,F12.7) )
 
 DO L66=1,nr
-WRITE(69,*)(SHARMA(J,l66),J=1,NUM_PARAM+1)
+WRITE(69,*)(final_array(J,l66),J=1,NUM_PARAM+1)
 END DO
 
 ! print*,'complete the first DR'
@@ -154,13 +154,13 @@ END DO
  R01=0
  S=0
         do i=1,nr
-        R01=SHARMA(j+1,i)+R01                        !finding mean
+        R01=final_array(j+1,i)+R01                        !finding mean
         end do
  m(j)=R01/nr                                        !value of mean
 
 
                 do i=1,nr
-                S=S+((SHARMA(j+1,i)-m(j))**2)/(nr-1)   !finding variance
+                S=S+((final_array(j+1,i)-m(j))**2)/(nr-1)   !finding variance
                 end do
  
  SD(j)=S                                                       !value of variance
@@ -171,7 +171,7 @@ END DO
         do j=1,NUM_PARAM-I1
         RS=0
                 do i=1,nr
-                RS=RS+SHARMA(j+1,i)*SHARMA(j+1+I1,i)          !finding covariance matrix
+                RS=RS+final_array(j+1,i)*final_array(j+1+I1,i)          !finding covariance matrix
                 end do
 !          C(j,j+I1)=(RS-m(j)*m(j+I1))/(nr-1)
                  C(j,j+I1)=(RS/(nr-1)) - (m(j)*m(j+I1))
@@ -244,7 +244,7 @@ CALL PRINT_MATRIX( 'Eigenvalues', 1, NUM_PARAM, DW, 1,0)
 CALL PRINT_MATRIX( 'Eigenvectors (stored column-wise)', NUM_PARAM, NUM_PARAM, DC,LDA,1)
 
 DEALLOCATE(WORK)
-DEALLOCATE(SHARMA)
+DEALLOCATE(final_array)
 ! print*,'complete calculating the eigenvalues'
 !*======================================EIGENFUNCTONS=========================================================
 
@@ -278,7 +278,7 @@ ENDDO
 ! PRINT*,'complete calculating the eigenfunction'
 !*=====================================FINAL RUN FOR THE CHI SQUARE==========================================
 DEALLOCATE(C)
-ALLOCATE(SHARMA(NUM_PARAM+1,nr))
+ALLOCATE(final_array(NUM_PARAM+1,nr))
 !$OMP DO
 
 DO L66 = 1,nr
@@ -288,7 +288,7 @@ I12 = 0
 k=0
 cont = 0
 ek = 0
-ranbir = 0
+initial_array = 0
 
         DO i=1,l100
         b(i) = r1 - i*dp
@@ -340,49 +340,49 @@ ranbir = 0
 
                           if (chi .le. chi2)then 
                           chi2=chi
-                           ranbir(1)=chi
+                           initial_array(1)=chi
 
                           DO J=1,NUM_PARAM
-                          ranbir(J+1) = b(K(J))
+                          initial_array(J+1) = b(K(J))
                           END DO 
                           
                           end if
                           END DO                             !ending loop of l10
 
-         SHARMA(1,l66) = chi2
+         final_array(1,l66) = chi2
          DO J = 1,NUM_PARAM
-         SHARMA(J+1,l66) = ranbir(J+1)
+         final_array(J+1,l66) = initial_array(J+1)
          END DO
 END DO
 !$OMP END DO
 !$OMP END PARALLEL
 
 DO L66=1,nr
-WRITE(13,*)(SHARMA(J,l66),J=1,NUM_PARAM+1)
+WRITE(13,*)(final_array(J,l66),J=1,NUM_PARAM+1)
 END DO
 
 ! print*,'complete calculating the second DR'
 !*==============================MINIMISING THE FINAL DATA-SET=================================================
 
- sum2 = SHARMA(1,1)
+ sum2 = final_array(1,1)
 
 DO L66 = 1,nr
-        IF (sum2 .GE. SHARMA(1,L66)) THEN
+        IF (sum2 .GE. final_array(1,L66)) THEN
         J=L66
-        SUM2=SHARMA(1,L66)
+        SUM2=final_array(1,L66)
         END IF 
 END DO
-WRITE(1993,*)(SHARMA(I,J),I=1,NUM_PARAM + 1)
+WRITE(1993,*)(final_array(I,J),I=1,NUM_PARAM + 1)
 
 DO I = 1,NUM_PARAM + 1
-RANBIR(I)=SHARMA(I,J)
+initial_array(I)=final_array(I,J)
 END DO
 
 ! print*,'complete finding the minimum'
 !*========================================FINDING THE COEFFICIENTS AND THE FUNCTOINAL FORM==================
 NEW13 = 2
-DEALLOCATE(SHARMA)
-ALLOCATE(SHARMA(NEW13,data_points))
+DEALLOCATE(final_array)
+ALLOCATE(final_array(NEW13,data_points))
 DO I1 = NUM_PARAM - 5, NUM_PARAM
 
 write(file_id,'(i10)')I1
@@ -396,7 +396,7 @@ ALLOCATE(COFF(I1))
         DO J = 1,I1
         COFF(J) = 0
                 DO I = 1, NUM_PARAM
-                COFF(J) = RANBIR(I+1)*DC(I,J) + COFF(J)
+                COFF(J) = initial_array(I+1)*DC(I,J) + COFF(J)
                 END DO
         END DO
 
@@ -408,12 +408,12 @@ ALLOCATE(COFF(I1))
                 DO J = 1,I1
                 SUM2 = SUM2 + COFF(J)*((funct(r))**(j-1))
                 END DO
-        SHARMA(2,I) = SUM2
-        SHARMA(1,I) = DAT(1,I)       
+        final_array(2,I) = SUM2
+        final_array(1,I) = DAT(1,I)       
         END DO
 ! print*,'one step forward'
         DO I=1,data_points
-        WRITE(1932,*)(SHARMA(J,I),J=1,NEW13)
+        WRITE(1932,*)(final_array(J,I),J=1,NEW13)
         END DO
 
 DEALLOCATE(COFF)
