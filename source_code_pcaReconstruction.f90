@@ -44,22 +44,22 @@ ALLOCATE(C(NUM_PARAM,NUM_PARAM))
 ALLOCATE(DC(LDA,NUM_PARAM))
 ALLOCATE(M(NUM_PARAM))
 
-open(0,file='./in_files/beta_data.dat',status='old')
-open(1,file='./in_files/input.dat',status='old')
+open(0,file='./beta_data.dat',status='old')
+open(1,file='./input.dat',status='old')
 read(0,*)dat
 read(1,*)u
  close(0)
  close(1)
  
-open(69,file='./out_files/DATA_p07.txt',status='replace')
-open(6969,file='./out_files/COV_MATRIX_p07.txt',status='replace')
-OPEN(56,FILE='./out_files/EIGENVALUES_p07.txt',status='replace')
-OPEN(65,FILE='./out_files/EIGENVECTORS_p07.txt',status='replace')
-OPEN(96,FILE='./out_files/EIGENFUNCTIONS_p07.txt',STATUS='replace')
+open(69,file='./DATA_p07.txt',status='replace')
+open(6969,file='./COV_MATRIX_p07.txt',status='replace')
+OPEN(56,FILE='./EIGENVALUES_p07.txt',status='replace')
+OPEN(65,FILE='./EIGENVECTORS_p07.txt',status='replace')
+OPEN(96,FILE='./EIGENFUNCTIONS_p07.txt',STATUS='replace')
 
-OPEN(9696,FILE='./out_files/NEIGENFNS_p07.txt',STATUS='replace')
-OPEN(13,FILE='./out_files/DATA_FINAL_N_p07.txt',STATUS='replace')
-OPEN(1993,FILE='./out_files/FINAL_FILE_N_p07.txt',STATUS='replace')
+OPEN(9696,FILE='./NEIGENFNS_p07.txt',STATUS='replace')
+OPEN(13,FILE='./DATA_FINAL_N_p07.txt',STATUS='replace')
+OPEN(1993,FILE='./FINAL_FILE_N_p07.txt',STATUS='replace')
 
 final_array = 0
 !$OMP PARALLEL DEFAULT(PRIVATE) SHARED(NUM_PARAM,OMEGAM,OMEGAX,H0,H0_V,L100,U,dat,final_array,nr) NUM_THREADS(12)
@@ -386,8 +386,8 @@ ALLOCATE(final_array(NEW13,data_points))
 DO I1 = NUM_PARAM - 5, NUM_PARAM
 
 write(file_id,'(i10)')I1
-filename = './out_files/resultant_p07_fn1_' // trim(adjustl(file_id)) // '.txt'
-coffname = './out_files/resultant_coff_p07_fn1_' // trim(adjustl(file_id)) // '.txt'
+filename = './resultant_p07_fn1_' // trim(adjustl(file_id)) // '.txt'
+coffname = './resultant_coff_p07_fn1_' // trim(adjustl(file_id)) // '.txt'
 open(file = trim(filename), unit = 1932, status = 'replace')
 open(file = trim(coffname), unit = 1947, status = 'replace')
 
