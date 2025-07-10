@@ -8,10 +8,11 @@ Author: Ranbir
 * Theory and the principle are explained in the following papers:
 1. https://arxiv.org/abs/2004.01393
 2. https://arxiv.org/abs/2211.13608
-<br>
-* Steps of reconstructions:
+
+<be>
+
 * input files for souce_code_pcaReconstruction.f90:
-1. The fortran array of dependent and independent variable, with the error in dependent variable (example: beta_data.dat). 
+1. The Fortran array of dependent and independent variables, with the error in the dependent variable (example file: beta_data.dat). 
 2. The table of patch points in the parameter space (example: input.dat)
    
 <be>
