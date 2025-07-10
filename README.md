@@ -3,8 +3,8 @@
 <br>
 Author: Ranbir
 
-# This program gives the function of dependent vaiable in terms of independent variable when the array of 
-# dependent and the indendent variable is available. 
+* This program gives the function of dependent vaiable in terms of independent variable when the array of 
+* dependent and the indendent variable is available. 
 
 # Theory and the principle are explained in the following papers:
 1. https://arxiv.org/abs/2004.01393
