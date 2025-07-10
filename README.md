@@ -13,11 +13,15 @@ Author: Ranbir
 * input files for souce_code_pcaReconstruction.f90:
 1. The fortran array of dependent and independent variable, with the error in dependent variable (example: beta_data.dat). 
 2. The table of patch points in the parameter space (example: input.dat)
-<br>
+   
+<be>
+
 * output files for souce_code_pcaReconstruction.f90:
 1. Eigen-vector, eigen-values of the PCA analysis. 
 2. The coefficients of the final functional form of the dependent variable in terms of the independent variable.
-<br>
+
+<be>
+
 * Following are the pre-requisite for the source_code_pcaReconstruction.f90 to run.
 1. OpenMP
 2. Lapack and Blas
