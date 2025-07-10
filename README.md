@@ -3,13 +3,13 @@
 <br>
 Author: Ranbir
 
-# This program gives the function of dependent vaiable in terms of independent variable when the array of  dependent and the indendent variable is available. 
+* This program gives the function of dependent vaiable in terms of independent variable when the array of  dependent and the indendent variable is available. 
 
-# Theory and the principle are explained in the following papers:
+* Theory and the principle are explained in the following papers:
 1. https://arxiv.org/abs/2004.01393
 2. https://arxiv.org/abs/2211.13608
 
-# Steps of reconstructions:
+* Steps of reconstructions:
 * input files for souce_code_pcaReconstruction.f90:
 1. The fortran array of dependent and independent variable, with the error in dependent variable (example: beta_data.dat). 
 2. The table of patch points in the parameter space (example: input.dat)
